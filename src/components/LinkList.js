@@ -16,15 +16,29 @@ class LinkList extends Component {
     return (
       <div>
         {linksToRender.map((link, i) => (
-          <Link key={link.id} index={i} link={link} />
+          <Link
+            key={link.id}
+            updateStoreAfterVote={this._updateCacheAfterVote}
+            index={i}
+            link={link}
+          />
         ))}
       </div>
     );
   }
+
+  _updateCacheAfterVote = (store, createVote, linkId) => {
+    const data = store.readQuery({ query: FEED_QUERY });
+
+    const votedLink = data.feed.links.find(link => link.id === linkId);
+    votedLink.votes = createVote.link.votes;
+
+    store.writeQuery({ query: FEED_QUERY, data });
+  };
 }
 
 // 1
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   # 2
   query FeedQuery {
     feed {

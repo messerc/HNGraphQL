@@ -38,6 +38,9 @@ class Link extends Component {
     await this.props.voteMutation({
       variables: {
         linkId
+      },
+      update: (store, { data: { vote }}) => {
+        this.props.updateStoreAfterVote(store, vote, linkId)
       }
     });
   };
